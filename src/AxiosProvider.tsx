@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import axios, { AxiosResponse, isAxiosError } from "axios";
+import * as Sentry from "@sentry/react";
 
 axios.defaults.baseURL = process.env.REACT_APP_BASE_URL;
 axios.defaults.headers.common["Content-Type"] = "application/json";
@@ -33,9 +34,11 @@ export const AxiosProvider: React.FC<AxiosProviderProps> = ({ children }) => {
 
           if (status === 401) {
             // auth.logOut();
+            Sentry.captureException(e);
             return Promise.reject(e);
           }
         }
+        Sentry.captureException(e);
         return Promise.reject(e);
       }
     );

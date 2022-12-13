@@ -1,9 +1,21 @@
+import SentryCliPlugin from "@sentry/webpack-plugin";
 import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
+import dotenv from "dotenv";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import path from "path";
+import { WebpackPluginInstance } from "webpack";
 import { WebpackConfiguration } from "webpack-dev-server";
 import { merge } from "webpack-merge";
 import commonConfig from "./webpack.common.config";
+
+const sentryPlugin = (): WebpackPluginInstance => {
+  dotenv.config();
+  return new SentryCliPlugin({
+    include: "./build",
+    release: process.env.REACT_APP_COMMIT,
+    dryRun: !process.env.REACT_APP_COMMIT,
+  });
+};
 
 export const config: WebpackConfiguration = {
   mode: "production",
@@ -46,6 +58,7 @@ export const config: WebpackConfiguration = {
       filename: "[name].[contenthash].css",
       chunkFilename: "[id].[contenthash].css",
     }),
+    sentryPlugin(),
   ],
 };
 

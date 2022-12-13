@@ -1,16 +1,16 @@
-import React, { useEffect } from "react";
-import axios, { AxiosResponse, isAxiosError } from "axios";
 import * as Sentry from "@sentry/react";
+import axios, { AxiosResponse, isAxiosError } from "axios";
+import React, { useEffect } from "react";
 
 axios.defaults.baseURL = process.env.REACT_APP_BASE_URL;
 axios.defaults.headers.common["Content-Type"] = "application/json";
 
 interface AxiosProviderProps {
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
 export const AxiosProvider: React.FC<AxiosProviderProps> = ({ children }) => {
-  const auth = { token: "" }
+  const auth = { token: "" };
 
   useEffect(() => {
     axios.interceptors.request.use((config) => {

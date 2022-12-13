@@ -1,5 +1,7 @@
 import SentryCliPlugin from "@sentry/webpack-plugin";
 import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
+//@ts-ignore
+import DeleteSourceMapsWebpackPlugin from "delete-source-maps-webpack-plugin";
 import dotenv from "dotenv";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import path from "path";
@@ -12,6 +14,10 @@ const sentryPlugin = (): WebpackPluginInstance => {
   dotenv.config();
   return new SentryCliPlugin({
     include: "./build",
+    setCommits: {
+      commit: process.env.REACT_APP_COMMIT,
+      repo: "Moriarty33/handle-errors-web",
+    },
     release: process.env.REACT_APP_COMMIT,
     dryRun: !process.env.REACT_APP_COMMIT,
   });
@@ -59,6 +65,7 @@ export const config: WebpackConfiguration = {
       chunkFilename: "[id].[contenthash].css",
     }),
     sentryPlugin(),
+    new DeleteSourceMapsWebpackPlugin(),
   ],
 };
 
